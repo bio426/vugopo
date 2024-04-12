@@ -18,7 +18,14 @@ RUN go build -o ./bin/main ./main.go
 
 # RUN
 FROM alpine:latest
+
 ENV PROD="true"
+ENV PG_HOST="localhost"
+ENV PG_PORT="5432"
+ENV PG_USER="postgres"
+ENV PG_PASSWORD="password"
+ENV PG_DATABASE="vugopo"
+
 WORKDIR /app
 COPY --from=builder-ui /app/dist ./dist
 COPY --from=builder-sv /app/bin/main .

@@ -9,9 +9,16 @@ import (
 
 var Postgres *sql.DB
 
-func InitPostgres() {
+func InitPostgres() error {
+	var sourceStr string
+	if Config.PROD {
+		sourceStr = "host=%s port=%s user=%s password=%s dbname=%s sslmode=require"
+	} else {
+		sourceStr = "host=%s port=%s user=%s password=%s dbname=%s sslmode=disable"
+	}
+
 	psqlInfo := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		sourceStr,
 		Config.PG_HOST,
 		Config.PG_PORT,
 		Config.PG_USER,
@@ -22,8 +29,14 @@ func InitPostgres() {
 	// Open a connection to the database.
 	db, err := sql.Open("postgres", psqlInfo)
 	if err != nil {
-		panic(err)
+		return err
+	}
+
+	if err := db.Ping(); err != nil {
+		return err
 	}
 
 	Postgres = db
+
+	return nil
 }

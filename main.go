@@ -41,9 +41,10 @@ func main() {
 			AllowOrigins:     []string{"http://localhost:5173"},
 			AllowCredentials: true,
 		}))
-		// e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		// 	Format: "method=${method}, uri=${uri}, status=${status}\n",
-		// }))
+		e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+			// Format: "${time_rfc3339} ${method} ${uri} ${status}\n",
+			Format: "${method} ${uri} ${status}\n",
+		}))
 	}
 
 	route.RegisterApi(e)
